@@ -123,9 +123,51 @@ describe("Reproduce Agarwal et al. (2013), table 1, compute_optimal_refi_rates()
     
   })
 
-  
-  
-
 })
 
   
+
+test_that("compute_optimal_refi_rates() can reproduce Agarwal et al. table 1 for a $1M mortgage when the user supplies kappa", {
+  kappa <- compute_kappa_M_itemize_mtg_pymts(
+    F = 2000, f = 0.01, M = 1e06, tau = 0.28, mu = 0.1, rho = 0.05, pi = 0.03, N = 30
+  )
+
+  df <- compute_optimal_refi_rates(
+    rho = 0.05, sigma = 0.0109, mu = 0.1, i_0 = 0.06,
+    gamma_uppercase = 25, pi = 0.03, tau = 0.28,
+    M = 1e06, F = 2000, f = 0.01, N = 30,
+    kappa = kappa, 
+    itemize_mtg_pymts = TRUE
+  )
+
+  expect_equal(round(df$x_star_optimal_refi_differential, 4), 0.0107)
+  expect_equal(round(df$x_star_sqrt_rule, 4), 0.0097)
+  expect_equal(round(df$x_pv_rule, 4), 0.0027)
+
+})
+
+
+test_that("`itemize_mtg_pymts` in compute_optimal_refi_rates() does not matter when the user supplies `kappa`", {
+  kappa <- compute_kappa_M_itemize_mtg_pymts(
+    F = 2000, f = 0.01, M = 1e06, tau = 0.28, mu = 0.1, rho = 0.05, pi = 0.03, N = 30
+  )
+
+  df_itemize_mtg_pymts_true <- compute_optimal_refi_rates(
+    rho = 0.05, sigma = 0.0109, mu = 0.1, i_0 = 0.06,
+    gamma_uppercase = 25, pi = 0.03, tau = 0.28,
+    M = 1e06, F = 2000, f = 0.01, N = 30,
+    kappa = kappa, 
+    itemize_mtg_pymts = TRUE
+  )
+
+  df_itemize_mtg_pymts_false <- compute_optimal_refi_rates(
+    rho = 0.05, sigma = 0.0109, mu = 0.1, i_0 = 0.06,
+    gamma_uppercase = 25, pi = 0.03, tau = 0.28,
+    M = 1e06, F = 2000, f = 0.01, N = 30,
+    kappa = kappa, 
+    itemize_mtg_pymts = FALSE
+  )
+
+  expect_equal(df_itemize_mtg_pymts_true, df_itemize_mtg_pymts_false)
+
+})
