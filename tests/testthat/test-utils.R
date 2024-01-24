@@ -148,8 +148,6 @@ describe("Reproduce Agarwal et al. (2013), table 2. x_star()", {
 
   }
   
-
-  
   it(
     "can reproduce the Exact Optimum (Table 2, row 1), for a $1M mortgage",
     {
@@ -171,30 +169,13 @@ describe("Reproduce Agarwal et al. (2013), table 2. x_star()", {
   it(
     "can reproduce the Exact Optimum (Table 2, row 2), for a $0.5M mortgage",
     {
-      compute_x_star_table_2_1m <- function(tau) {
+      compute_x_star_table_2_0.5m <- function(tau) {
         round(compute_x_star_table_2(M = 0.5e06, tau = tau), 4)
       }
       
       expect_equal(
         sapply(c(0, 0.1, 0.15, 0.25, 0.28, 0.33, 0.35), 
-               compute_x_star_table_2_1m),
-        c(0.0108, 0.0111, 0.0113, 0.0117, 0.0118, 0.0121, 0.0122)
-      )
-      
-    }
-  )
-
-
-  it(
-    "can reproduce the Exact Optimum (Table 2, row 2), for a $0.5M mortgage",
-    {
-      compute_x_star_table_2_1m <- function(tau) {
-        round(compute_x_star_table_2(M = 0.5e06, tau = tau), 4)
-      }
-      
-      expect_equal(
-        sapply(c(0, 0.1, 0.15, 0.25, 0.28, 0.33, 0.35), 
-               compute_x_star_table_2_1m),
+               compute_x_star_table_2_0.5m),
         c(0.0108, 0.0111, 0.0113, 0.0117, 0.0118, 0.0121, 0.0122)
       )
       
@@ -204,13 +185,13 @@ describe("Reproduce Agarwal et al. (2013), table 2. x_star()", {
   it(
     "can reproduce the Exact Optimum (Table 2, row 3), for a $0.25M mortgage",
     {
-      compute_x_star_table_2_1m <- function(tau) {
+      compute_x_star_table_2_0.25m <- function(tau) {
         round(compute_x_star_table_2(M = 0.25e06, tau = tau), 4)
       }
       
       expect_equal(
         sapply(c(0, 0.1, 0.15, 0.25, 0.28, 0.33, 0.35), 
-               compute_x_star_table_2_1m),
+               compute_x_star_table_2_0.25m),
         c(0.0124, 0.0129, 0.0131, 0.0137, 0.0139, 0.0143, 0.0145)
       )
       
@@ -220,13 +201,13 @@ describe("Reproduce Agarwal et al. (2013), table 2. x_star()", {
   it(
     "can reproduce the Exact Optimum (Table 2, row 4), for a $0.1M mortgage",
     {
-      compute_x_star_table_2_1m <- function(tau) {
+      compute_x_star_table_2_0.1m <- function(tau) {
         round(compute_x_star_table_2(M = 0.1e06, tau = tau), 4)
       }
       
       expect_equal(
         sapply(c(0, 0.1, 0.15, 0.25, 0.28, 0.33, 0.35), 
-               compute_x_star_table_2_1m),
+               compute_x_star_table_2_0.1m),
         # Change the third, second-to-last, and last entries for
         # a tolerance of 0.0001 with Agarwal et al. (2013)
         c(0.0166, 0.0174, 0.0179, 0.0189, 0.0193, 0.0200, 0.0203)

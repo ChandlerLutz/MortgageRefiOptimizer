@@ -1,0 +1,112 @@
+#' Compute Optimal Refinance Rates
+#'
+#' This function calculates the optimal refinance rates based on various financial parameters and decision thresholds. It incorporates tax adjustments, mortgage payment itemization, and different rules to determine the optimal refinance differential.
+#'
+#' @param rho The real discount rate, as a decimal, which equals the
+#'   nominal interest rate minus the inflation rate.  See Agarwal et
+#'   al. (2013) p. 606 (p. 16 of the pdf) and the Fisher equation for
+#'   details.  Fisher equation:
+#'   https://en.wikipedia.org/wiki/Fisher_equation
+#' @param sigma The annualized standard deviation of the mortgage
+#'   interest rate.  See footnote 15 in Agarwal et al. (2013) for
+#'   details.
+#' @param mu Probability of moving each year (as a decimal); Agarwal
+#'   et al. assume 0.1 or an expected duration of staying in the house
+#'   of 10 years.
+#' @param i_0 The nominal interest rate of the mortgage.
+#' @param gamma_uppercase The remaining life of the mortgage in years.
+#' @param pi Inflation rate as a decimal.
+#' @param tau The marginal tax rate as a decimal.
+#' @param M The real value of remaining principal.
+#' @param F Fixed costs of refinancing.
+#' @param f Fraction of the mortgage amount representing the variable
+#'   costs of refinancing. `100 * f` is the number of points (so,
+#'   specify the points as a decimal).
+#' @param N The number of years for the new mortgage after
+#'   refinancing.
+#' @param itemize_mtg_pymts Logical; if TRUE, mortgage payments are
+#'   itemized in the tax-adjusted cost of refinance. if FALSE,
+#'   mortgage payments are not a tax deduction for the tax-adjusted
+#'   cost of refinance.
+#'
+#' @return A data frame with the following columns:
+#'   - x_star_optimal_refi_differential: The optimal refinance rate differential from Agarwal et al. (2013).
+#'   - max_refi_rate_using_x_star: The maximum refinance rate using x_star rule.
+#'   - x_star_sqrt_rule: The square root rule for optimal refinance rate differential from Agarwal et al. (2013).
+#'   - max_refi_rate_using_x_star_sqrt_rule: The maximum refinance rate using the square root rule.
+#'   - x_pv_rule: The present value rule for the refinance rate differential.
+#'   - max_refi_rate_using_x_pv_rule: The maximum refinance rate using the present value rule.
+#'   - lambda: The expected real rate of exogenous mortgage repayment.
+#'   - kappa: The real, tax-adjusted cost of refinancing a mortgage.
+#'   - C_M: The cost of refinancing normalized for the tax rate, tau.
+#'   - psi: psi value as described in the referenced source. [ChatGPT explanation of psi](https://chat.openai.com/share/90c95875-8940-4979-aaf2-bc0acff5282b).
+#'   - phi: Phi value as described in the referenced source.
+#'
+#'
+#' @examples
+#' # Example, using the calibration in Agarwal table 1 for a $1M mortgage:
+#' optimal_rates <- compute_optimal_refi_rates(
+#'   rho = 0.05, sigma = 0.0109, mu = 0.1, i_0 = 0.06,
+#'   gamma_uppercase = 25, pi = 0.03, tau = 0.28,
+#'   M = 1e06, F = 2000, f = 0.01, N = 30,
+#'   itemize_mtg_pymts = TRUE
+#' )
+#'
+#' @references
+#' Agarwal, S., Driscoll, J. C., & Laibson, D. (2013). Optimal Mortgage Refinancing: A Closed-Form Solution.
+#' Journal of Money, Credit and Banking, 45(4), 591-622.
+#' [Wikipedia Fisher Equation](https://en.wikipedia.org/wiki/Fisher_equation)
+#' [ChatGPT Fisher Equation](https://chat.openai.com/share/4b0d0bb5-8572-4540-8841-24a5cacdffe6)
+#' [ChatGPT explanation of psi](https://chat.openai.com/share/90c95875-8940-4979-aaf2-bc0acff5282b)
+#' 
+#' @export
+compute_optimal_refi_rates <- function(rho, sigma, mu, i_0, gamma_uppercase, pi,
+                                       tau, M, F, f, N, itemize_mtg_pymts = FALSE) {
+
+  if (isTRUE(itemize_mtg_pymts)) {
+    # Itemize mortgage payments in the tax-adjusted cost of refinance
+    kappa <- compute_kappa_M_itemize_mtg_pymts(F, f, M, tau, mu, rho, pi, N)
+    
+  } else {
+    # DO NOT itemize mortgage payments in the tax-adjusted cost of refinance
+    kappa <- compute_kappa_M_no_itemizing_of_mtg_pymts(f, M, F)
+  }
+
+  lambda <- compute_lambda(mu, i_0, gamma_uppercase, pi)
+
+  C_M <- compute_C_M(kappa, tau)
+
+  psi <- compute_psi(rho, lambda, sigma)
+
+  phi <- compute_phi(psi, rho, lambda, kappa, M, tau)
+
+  x_star <- compute_x_star(rho, sigma, mu, i_0, gamma_uppercase, pi, tau, M, kappa)
+
+  # Make sure that compute_x_star() and compute_x_star_short() yield the same results
+  if (x_star != compute_x_star_short(psi, phi)) {
+    stop("Error: x_star and compute_x_star_short() do not yield the same results")
+  }
+
+  x_star_sqrt_rule <- compute_x_star_2nd_order_sqrt_rule(sigma, kappa, M, tau, rho, mu,
+                                                         i_0, gamma_uppercase, pi)
+
+  x_pv_rule <- compute_pv_breakeven_threshold(C_M, rho, lambda, M)
+
+
+  df_out <- data.frame(
+    x_star_optimal_refi_differential = x_star,
+    max_refi_rate_using_x_star = i_0 - x_star,
+    x_star_sqrt_rule = x_star_sqrt_rule,
+    max_refi_rate_using_x_star_sqrt_rule = i_0 - x_star_sqrt_rule,
+    x_pv_rule = x_pv_rule,
+    max_refi_rate_using_x_pv_rule = i_0 - x_pv_rule,
+    lambda = lambda,
+    kappa = kappa,
+    C_M = C_M, 
+    psi = psi,
+    phi = phi
+  )
+
+  return(df_out)
+
+}
