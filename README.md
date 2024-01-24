@@ -23,7 +23,7 @@ The main package function is `compute_optimal_refi_rates()`
 - See `?compute_optimal_refi_rates` for function parameters and a
   description of the output.
 
-Reproduce Agarwal Table 1 for a \$1M mortgage:
+Reproduce Agarwal et al. (2013) Table 1 for a \$1M mortgage:
 
 ``` r
 library(MortgageRefiOptimizer)
