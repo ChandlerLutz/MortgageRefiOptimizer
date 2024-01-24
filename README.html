@@ -629,13 +629,20 @@ and a description of the output.</li>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">M =</span> <span class="fl">1e06</span>, <span class="at">F =</span> <span class="dv">2000</span>, <span class="at">f =</span> <span class="fl">0.01</span>, <span class="at">N =</span> <span class="dv">30</span>,</span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">itemize_mtg_pymts =</span> <span class="cn">TRUE</span></span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>)</span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="fu">print</span>(df_optimal_rates)</span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt;   x_star_optimal_refi_differential max_refi_rate_using_x_star x_star_sqrt_rule</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 1                       0.01069965                 0.04930035      0.009704472</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;   max_refi_rate_using_x_star_sqrt_rule   x_pv_rule max_refi_rate_using_x_pv_rule   lambda</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; 1                           0.05029553 0.002713264                    0.05728674 0.147233</span></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt;      kappa      C_M      psi     phi</span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; 1 9904.783 13756.64 57.62067 1.15634</span></span></code></pre></div>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="fu">str</span>(df_optimal_rates)</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    1 obs. of  11 variables:</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;  $ x_star_optimal_refi_differential    : num 0.0107</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt;  $ max_refi_rate_using_x_star          : num 0.0493</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt;  $ x_star_sqrt_rule                    : num 0.0097</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt;  $ max_refi_rate_using_x_star_sqrt_rule: num 0.0503</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt;  $ x_pv_rule                           : num 0.00271</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt;  $ max_refi_rate_using_x_pv_rule       : num 0.0573</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt;  $ lambda                              : num 0.147</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt;  $ kappa                               : num 9905</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt;  $ C_M                                 : num 13757</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt;  $ psi                                 : num 57.6</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt;  $ phi                                 : num 1.16</span></span></code></pre></div>
 <ul>
 <li>The package tests reproduce Agarwal et al. (2013) tables 1 and
 2.</li>
