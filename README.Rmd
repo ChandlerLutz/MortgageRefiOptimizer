@@ -18,37 +18,32 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of MortgageRefiOptimizer is to ...
+MortgageRefiOptimizer computes optimal refinance rates for fixed rate mortgages from various financial parameters from Agarwal et al (2013; "Optimal Mortgage Refinancing: A Closed-Form Solution"). 
 
 ## Installation
 
-You can install the development version of MortgageRefiOptimizer like so:
-
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+devtools::install_github("ChandlerLutz/MortgageRefiOptimizer")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+The main package function is `compute_optimal_refi_rates()`
+
+- See `?compute_optimal_refi_rates` for function parameters and a description of the output. 
+
+Reproduce Agarwal Table 1 for a $1M mortgage: 
 
 ```{r example}
 library(MortgageRefiOptimizer)
-## basic example code
+
+df_optimal_rates <- compute_optimal_refi_rates(
+  rho = 0.05, sigma = 0.0109, mu = 0.1, i_0 = 0.06,
+  gamma_uppercase = 25, pi = 0.03, tau = 0.28,
+  M = 1e06, F = 2000, f = 0.01, N = 30,
+  itemize_mtg_pymts = TRUE
+)
+print(df_optimal_rates)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+- The package tests reproduce Agarwal et al. (2013) tables 1 and 2. 
