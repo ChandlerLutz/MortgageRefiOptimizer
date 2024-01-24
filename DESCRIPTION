@@ -1,6 +1,6 @@
 Package: MortgageRefiOptimizer
-Title: Find the optimal refinancing rates and thresholds for fixed rates, U.S. style mortgages.
-Version: 0.0.0.9000
+Title: Find the optimal refinancing rates and thresholds for fixed rates, U.S. style mortgages
+Version: 0.0.1.0000
 Authors@R: 
     person("Lutz", "Chandler", , "chandler.lutz@gmail.com", role = c("aut", "cre"))
 Description: Find the optimal refinancing rates and thresholds for fixed rates, U.S. style mortgages.
@@ -11,3 +11,5 @@ RoxygenNote: 7.3.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Imports: 
+    gsl
